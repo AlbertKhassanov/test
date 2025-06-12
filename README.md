@@ -36,6 +36,12 @@ fluent
 Предустанавливается fluent-plugin-docker_metadata_filter:
   /opt/fluent/bin/fluent-gem install fluent-plugin-docker_metadata_filter  
 Заменяется стандартный конфиг
+Примеры метрик:
+fluentd_input_status_num_records_total
+fluentd_output_status_num_records_total
+fluentd_buffer_queue_length
+fluentd_retry_count
+fluentd_output_status_emit_count
 ```
 grafana
 ```
@@ -44,6 +50,10 @@ grafana
 metric
 ```
 Запускается контейнер с Node Exporter
+Примеры метрик:
+node_cpu_seconds_total
+node_memory_MemAvailable_bytes	
+node_filesystem_avail_bytes	
 ```
 nginx
 ```
@@ -52,4 +62,5 @@ nginx
 prometheus
 ```
 Установка контейнера Prometheus + добавление целей (Fluentd и Node Exporter) в конфигурацию
+
 ```
