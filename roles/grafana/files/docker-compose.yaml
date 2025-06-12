@@ -6,6 +6,7 @@ services:
     volumes:
       - grafana_data:/var/lib/grafana
       - ./config/dashboards.yaml:/etc/grafana/provisioning/dashboards/main.yaml
+      - ./config/prometheus.yaml:/etc/grafana/provisioning/datasources/prometheus.yaml
       - ./dashboards:/var/lib/grafana/dashboards
     restart: unless-stopped
 
