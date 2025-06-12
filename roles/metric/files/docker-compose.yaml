@@ -6,6 +6,7 @@ services:
     container_name: node-exporter
     network_mode: host
     restart: unless-stopped
+    pid: host
     volumes:
       - /proc:/host/proc:ro
       - /sys:/host/sys:ro
@@ -15,3 +16,8 @@ services:
       - '--path.rootfs=/rootfs'
       - '--path.sysfs=/host/sys'
       - '--collector.filesystem.mount-points-exclude=^/(sys|proc|dev|host|etc)($$|/)'
+      - '--collector.filesystem'
+      - '--collector.cpu'
+      - '--collector.meminfo'
+      - '--collector.netdev'
+      - '--collector.mountstats'
