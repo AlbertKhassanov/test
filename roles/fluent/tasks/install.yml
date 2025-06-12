@@ -1,0 +1,67 @@
+- name: Получить codename дистрибутива
+  command: lsb_release -sc
+  register: ubuntu_codename
+  changed_when: false
+
+- name: Установить Fluentd через скрипт
+  shell: |
+    curl -fsSL https://toolbelt.treasuredata.com/sh/install-ubuntu-{{ ubuntu_codename.stdout }}-fluent-package5-lts.sh | sh
+  args:
+    executable: /bin/bash
+  become: true
+
+- name: Проверить, существует ли /var/log/fluentd
+  stat:
+    path: /var/log/fluentd
+  register: fluentd_log_dir
+
+- name: Создать директорию /var/log/fluentd для Fluentd
+  file:
+    path: /var/log/fluentd
+    state: directory
+    owner: root
+    group: root
+    mode: '0755'
+
+- name: Установить fluent-plugin-docker_metadata_filter
+  shell: /opt/fluent/bin/fluent-gem install fluent-plugin-docker_metadata_filter
+  args:
+    executable: /bin/bash
+  become: true
+
+- name: Изменить systemd unit fluentd на запуск от root
+  lineinfile:
+    path: /usr/lib/systemd/system/fluentd.service
+    regexp: '^User=.*'
+    line: 'User=root'
+    state: present
+    backup: yes
+  become: true
+
+- name: Изменить group в systemd unit fluentd на root
+  lineinfile:
+    path: /usr/lib/systemd/system/fluentd.service
+    regexp: '^Group=.*'
+    line: 'Group=root'
+    state: present
+    backup: yes
+  become: true
+
+- name: Перезагрузить systemd-демон после изменения unit-файла
+  command: systemctl daemon-reexec
+  become: true
+
+- name: Копировать конфигурацию Fluentd
+  copy:
+    src: config/fluentd.conf
+    dest: /etc/fluent/fluentd.conf
+    owner: root
+    group: root
+    mode: '0644'
+  notify: Restart Fluentd
+
+- name: Убедиться, что Fluentd запущен и включён
+  systemd:
+    name: fluentd
+    enabled: true
+    state: started

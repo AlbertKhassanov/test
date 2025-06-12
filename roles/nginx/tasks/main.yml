@@ -1,0 +1,18 @@
+- name: Убедиться, что директория с docker-compose существует
+  file:
+    path: "{{ role_path }}/files"
+    state: directory
+
+- name: Проверить статус контейнеров
+  include_tasks: install.yml
+
+- name: Запустить docker-compose
+  command: docker-compose up -d
+  args:
+    chdir: "{{ role_path }}/files"
+  when: not container_running
+  register: compose_up_result
+
+- name: Показать результат запуска
+  debug:
+    var: compose_up_result

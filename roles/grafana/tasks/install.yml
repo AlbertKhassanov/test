@@ -1,0 +1,12 @@
+- name: Проверка, запущен ли контейнер {{ container_name }}
+  shell: docker ps --filter "name={{ container_name }}" --format '{{"{{"}}.Names{{"}}"}}'
+  register: running_containers
+  changed_when: false
+
+- name: Установка переменной о состоянии {{ container_name }}
+  set_fact:
+    container_running: "{{ container_name in running_containers.stdout_lines }}"
+
+- name: Вывод информации о {{ container_name }}
+  debug:
+    msg: "Контейнер {{ container_name }} запущен: {{ container_running }}"

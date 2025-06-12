@@ -1,0 +1,33 @@
+---
+- name: Проверка, установлен ли докер
+  stat:
+    path: /usr/bin/docker
+  register: docker_check
+  changed_when: false
+  check_mode: no
+  tags: always
+
+- name: Проверка, установлен ли docker-compose
+  stat:
+    path: /usr/bin/docker-compose
+  register: docker_compose_check
+  changed_when: false
+  check_mode: no
+  tags: always
+
+
+- name: Установить флаг docker_installed
+  set_fact:
+    docker_installed: "{{ docker_check.stat.exists | bool }}"
+
+- name: Установить флаг docker_compose_installed
+  set_fact:
+    docker_compose_installed: "{{ docker_compose_check.stat.exists | bool }}"
+
+- name: Устанавливаем Docker и Compose при необходимости
+  include_tasks: install.yml
+  when: (not docker_installed or not docker_compose_installed) and (install_docker | default(false) | bool)
+
+
+
+

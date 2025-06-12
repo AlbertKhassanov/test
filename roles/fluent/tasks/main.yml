@@ -1,0 +1,14 @@
+---
+- name: Проверка, установлен ли Fluentd
+  stat:
+    path: /usr/sbin/fluentd
+  register: fluentd_check
+  changed_when: false
+  check_mode: no
+  tags: always
+
+
+- name: Установить Fluentd при необходимости
+  include_tasks: install.yml
+  when: not fluentd_check.stat.exists
+

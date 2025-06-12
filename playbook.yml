@@ -1,0 +1,21 @@
+---
+- name: kek1
+  hosts: localhost
+  gather_facts: yes
+  remote_user: root
+
+  pre_tasks:
+    - name: check os
+      fail:
+        msg: "Debian"
+      when: ansible_facts.os_family != "Debian"
+
+  roles:
+    - { role: docker, tags: [docker] }
+    - { role: nginx, tags: [nginx] }
+    - { role: grafana, tags: [docker-grafana] }
+    - { role: prometheus, tags: [docker-prometheus] }
+    - { role: metric, tags: [docker-metric] }
+    - { role: fluent, tags: [fluent] }
+
+

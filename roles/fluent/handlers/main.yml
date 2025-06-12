@@ -1,0 +1,4 @@
+- name: Restart Fluentd
+  systemd:
+    name: fluentd
+    state: restarted
