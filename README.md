@@ -4,6 +4,7 @@ Prometheus + Node Exporter
 Fluentd как systemd-сервис на хосте для агрегации логов Docker-контейнеров
 Grafana с преднастроенными дашбордами — Fluentd dashboard, Node Exporter Full
 
+Автоматическая установка.
 Быстрый старт
 ```
 git clone https://github.com/AlbertKhassanov/test.git
